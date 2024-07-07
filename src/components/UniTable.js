@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import './UniTable.css';
+import Button from '@mui/material/Button';
+import Stack from '@mui/material/Stack'
 
 const UniTable = () => {
   const [universities, setUniversities] = useState([]);
@@ -27,9 +29,11 @@ const UniTable = () => {
   return (
     <div className="uni-table-container">
       <div className="buttons">
-        <button onClick={loadUniversities}>LOAD</button>
-        <button onClick={deleteLastUniversity}>DELETE</button>
-        <button onClick={addFirstUniversityToEnd}>ADD</button>
+      <Stack direction="row" spacing={2} justifyContent="center">
+        <Button variant="contained" onClick={loadUniversities}>LOAD</Button>
+        <Button variant="contained" color="error" onClick={deleteLastUniversity}>DELETE</Button>
+        <Button  variant="contained" color="success" onClick={addFirstUniversityToEnd}>ADD</Button>
+        </Stack>
       </div>
       <table>
         <thead>
