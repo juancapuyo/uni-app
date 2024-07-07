@@ -18,11 +18,18 @@ const UniTable = () => {
     setUniversities(universities.slice(0, -1));
   };
 
+  const addFirstUniversityToEnd = () => {
+    if (universities.length > 0) {
+      setUniversities([...universities, universities[0]]);
+    }
+  };
+
   return (
     <div className="uni-table-container">
       <div className="buttons">
         <button onClick={loadUniversities}>LOAD</button>
         <button onClick={deleteLastUniversity}>DELETE</button>
+        <button onClick={addFirstUniversityToEnd}>ADD</button>
       </div>
       <table>
         <thead>
