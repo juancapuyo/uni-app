@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 
 const app = express();
-const port = process.env.PORT || 5444;
+const port = process.env.PORT || 7444;
 
 // Middleware
 app.use(cors());
@@ -38,6 +38,17 @@ app.get('/universities', async (req, res) => {
     res.status(500).json({ message: err.message });
   }
 });
+
+// Create a new university
+app.post('/universities', async (req, res) => {
+    const university = new University(req.body);
+    try {
+      const savedUniversity = await university.save();
+      res.status(201).json(savedUniversity);
+    } catch (err) {
+      res.status(400).json({ message: err.message });
+    }
+  });
 
 app.listen(port, () => {
   console.log(`Server is running on port: ${port}`);
