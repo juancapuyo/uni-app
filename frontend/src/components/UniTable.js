@@ -1,4 +1,5 @@
 import React from 'react';
+import axios from 'axios';
 import './UniTable.css';
 import { useSelector, useDispatch } from 'react-redux';
 import { fetchUniversities, deleteLastUniversity, addFirstUniversityToEnd } from '../features/uniSlice';
@@ -28,6 +29,15 @@ const UniTable = () => {
       dispatch(addFirstUniversityToEnd());
     };
 
+    const handleLoadFromDatabase = async () => {
+      try {
+        const response = await axios.get('http://localhost:5444/universities');
+        dispatch({ type: 'universities/setUniversities', payload: response.data });
+      } catch (error) {
+        console.error('Error fetching universities from the database', error);
+      }
+    };
+
   return (
     <div className="uni-table-container">
     <div className='buttons'>
@@ -35,7 +45,8 @@ const UniTable = () => {
         <Button variant="contained" onClick={handleLoadUniversities}>LOAD</Button>
         <Button variant="contained" color="error" onClick={handleDeleteLastUniversity}>DELETE</Button>
         <Button  variant="contained" color="success" onClick={handleAddFirstUniversityToEnd}>ADD</Button>
-        </Stack>
+        <Button variant="contained" onClick={handleLoadFromDatabase}>LOAD FROM DATABASE</Button>
+      </Stack>
     </div>
     <TableContainer component={Paper} sx={{ maxHeight: 650 }}>
         <Table stickyHeader>

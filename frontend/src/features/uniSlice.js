@@ -20,6 +20,9 @@ const uniSlice = createSlice({
       if (state.length > 0) {
         return [...state, state[0]];
       }
+    },
+    setUniversities(state, action) {
+      return action.payload;
     }
   },
   extraReducers: (builder) => {
@@ -29,6 +32,6 @@ const uniSlice = createSlice({
   }
 });
 
-export const { deleteLastUniversity, addFirstUniversityToEnd } = uniSlice.actions;
+export const { deleteLastUniversity, addFirstUniversityToEnd, setUniversities} = uniSlice.actions;
 
 export default uniSlice.reducer;
