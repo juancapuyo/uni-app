@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
-import axios from 'axios';
+import React from 'react';
 import './UniTable.css';
+import { useSelector, useDispatch } from 'react-redux';
+import { fetchUniversities, deleteLastUniversity, addFirstUniversityToEnd } from '../features/uniSlice';
 import Button from '@mui/material/Button';
 import Stack from '@mui/material/Stack';
 import Paper from '@mui/material/Paper';
@@ -12,34 +13,28 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 
 const UniTable = () => {
-  const [universities, setUniversities] = useState([]);
-
-  const loadUniversities = async () => {
-    try {
-      const response = await axios.get('http://universities.hipolabs.com/search?country=Australia');
-      setUniversities(response.data);
-    } catch (error) {
-      console.error('Error fetching the university data', error);
-    }
-  };
-
-  const deleteLastUniversity = () => {
-    setUniversities(universities.slice(0, -1));
-  };
-
-  const addFirstUniversityToEnd = () => {
-    if (universities.length > 0) {
-      setUniversities([...universities, universities[0]]);
-    }
-  };
+    const dispatch = useDispatch();
+    const universities = useSelector((state) => state.universities);
+  
+    const handleLoadUniversities = () => {
+      dispatch(fetchUniversities());
+    };
+  
+    const handleDeleteLastUniversity = () => {
+      dispatch(deleteLastUniversity());
+    };
+  
+    const handleAddFirstUniversityToEnd = () => {
+      dispatch(addFirstUniversityToEnd());
+    };
 
   return (
     <div className="uni-table-container">
     <div className='buttons'>
       <Stack direction="row" spacing={2} justifyContent="center">
-        <Button variant="contained" onClick={loadUniversities}>LOAD</Button>
-        <Button variant="contained" color="error" onClick={deleteLastUniversity}>DELETE</Button>
-        <Button  variant="contained" color="success" onClick={addFirstUniversityToEnd}>ADD</Button>
+        <Button variant="contained" onClick={handleLoadUniversities}>LOAD</Button>
+        <Button variant="contained" color="error" onClick={handleDeleteLastUniversity}>DELETE</Button>
+        <Button  variant="contained" color="success" onClick={handleAddFirstUniversityToEnd}>ADD</Button>
         </Stack>
     </div>
     <TableContainer component={Paper} sx={{ maxHeight: 650 }}>

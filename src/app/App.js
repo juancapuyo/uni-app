@@ -1,5 +1,5 @@
 import React from 'react';
-import UniTable from './components/UniTable';
+import UniTable from '../components/UniTable';
 import './App.css';
 
 function App() {
