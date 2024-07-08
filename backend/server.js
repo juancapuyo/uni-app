@@ -3,20 +3,21 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 
 const app = express();
-const port = process.env.PORT || 5000;
+const port = process.env.PORT || 5444;
 
 // Middleware
 app.use(cors());
 app.use(express.json());
 
 // MongoDB connection
-const uri = 'mongodb+srv://juancapuyo7:<password>@juancluster.kethq2p.mongodb.net/?retryWrites=true&w=majority&appName=JuanCluster';
-mongoose.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true });
+const uri = "mongodb+srv://juancapuyo7:Caitlin2007%40@juancluster.kethq2p.mongodb.net/UniDB?retryWrites=true&w=majority&appName=JuanCluster";
 
-const connection = mongoose.connection;
-connection.once('open', () => {
-  console.log('MongoDB database connection established successfully');
-});
+mongoose.connect(uri, {
+  }).then(() => {
+    console.log('MongoDB database connection established successfully');
+  }).catch(err => {
+    console.error('MongoDB connection error:', err);
+  });
 
 // Schema and Model
 const universitySchema = new mongoose.Schema({
