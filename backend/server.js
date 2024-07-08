@@ -2,6 +2,8 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const dotenv = require('dotenv');
+const User = require('./models/user');
+const University = require('./models/university');
 
 // Load environment variables
 dotenv.config();
@@ -63,17 +65,20 @@ app.post('/login', async (req, res) => {
     }
   });
 
-app.get('/universities', async (req, res) => {
-    try {
-        const universities = await University.find();
-        res.json(universities);
-  } catch (err) {
-        res.status(500).json({ message: err.message });
-  }
-});
-
-// Create a new university
-app.post('/universities', async (req, res) => {
+// Middleware to protect routes
+const authMiddleware = (req, res, next) => {
+    const token = req.headers.authorization?.split(' ')[1];
+    if (!token) return res.status(401).json({ message: 'No token provided' });
+  
+    jwt.verify(token, secret, (err, decoded) => {
+        if (err) return res.status(401).json({ message: 'Invalid token' });
+        req.userId = decoded.id;
+        next();
+    });
+};
+  
+// Protect CRUD routes with the middleware
+app.post('/universities', authMiddleware, async (req, res) => {
     const university = new University(req.body);
     try {
         const savedUniversity = await university.save();
@@ -81,10 +86,28 @@ app.post('/universities', async (req, res) => {
     } catch (err) {
         res.status(400).json({ message: err.message });
     }
+});
+  
+app.get('/universities', async (req, res) => {
+    try {
+        const universities = await University.find();
+         res.json(universities);
+    } catch (err) {
+        res.status(500).json({ message: err.message });
+    }
+});
+  
+app.get('/universities/:id', async (req, res) => {
+    try {
+        const university = await University.findById(req.params.id);
+        if (!university) return res.status(404).json({ message: 'University not found' });
+        res.json(university);
+    } catch (err) {
+        res.status(500).json({ message: err.message });
+    }
   });
   
-// Update a university by ID
-app.put('/universities/:id', async (req, res) => {
+app.put('/universities/:id', authMiddleware, async (req, res) => {
     try {
         const updatedUniversity = await University.findByIdAndUpdate(req.params.id, req.body, { new: true });
         if (!updatedUniversity) return res.status(404).json({ message: 'University not found' });
@@ -94,8 +117,7 @@ app.put('/universities/:id', async (req, res) => {
     }
   });
   
-// Delete a university by ID
- app.delete('/universities/:id', async (req, res) => {
+app.delete('/universities/:id', authMiddleware, async (req, res) => {
     try {
         const deletedUniversity = await University.findByIdAndDelete(req.params.id);
         if (!deletedUniversity) return res.status(404).json({ message: 'University not found' });
@@ -106,5 +128,5 @@ app.put('/universities/:id', async (req, res) => {
   });
 
 app.listen(port, () => {
-  console.log(`Server is running on port: ${port}`);
+    console.log(`Server is running on port: ${port}`);
 });
