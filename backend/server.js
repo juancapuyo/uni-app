@@ -1,6 +1,10 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
+const dotenv = require('dotenv');
+
+// Load environment variables
+dotenv.config();
 
 const app = express();
 const port = process.env.PORT || 8444;
@@ -10,7 +14,7 @@ app.use(cors());
 app.use(express.json());
 
 // MongoDB connection
-const uri = "mongodb+srv://juancapuyo7:Caitlin2007%40@juancluster.kethq2p.mongodb.net/UniDB?retryWrites=true&w=majority&appName=JuanCluster";
+const uri = process.env.MONGODB_URI;
 
 mongoose.connect(uri, {
   }).then(() => {
