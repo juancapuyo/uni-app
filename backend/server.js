@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 
 const app = express();
-const port = process.env.PORT || 7444;
+const port = process.env.PORT || 8444;
 
 // Middleware
 app.use(cors());
@@ -43,10 +43,32 @@ app.get('/universities', async (req, res) => {
 app.post('/universities', async (req, res) => {
     const university = new University(req.body);
     try {
-      const savedUniversity = await university.save();
-      res.status(201).json(savedUniversity);
+        const savedUniversity = await university.save();
+        res.status(201).json(savedUniversity);
     } catch (err) {
-      res.status(400).json({ message: err.message });
+        res.status(400).json({ message: err.message });
+    }
+  });
+  
+// Update a university by ID
+app.put('/universities/:id', async (req, res) => {
+    try {
+        const updatedUniversity = await University.findByIdAndUpdate(req.params.id, req.body, { new: true });
+        if (!updatedUniversity) return res.status(404).json({ message: 'University not found' });
+        res.json(updatedUniversity);
+    } catch (err) {
+        res.status(400).json({ message: err.message });
+    }
+  });
+  
+// Delete a university by ID
+ app.delete('/universities/:id', async (req, res) => {
+    try {
+        const deletedUniversity = await University.findByIdAndDelete(req.params.id);
+        if (!deletedUniversity) return res.status(404).json({ message: 'University not found' });
+        res.json({ message: 'University deleted' });
+    } catch (err) {
+        res.status(500).json({ message: err.message });
     }
   });
 

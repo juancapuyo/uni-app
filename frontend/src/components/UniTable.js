@@ -31,7 +31,7 @@ const UniTable = () => {
 
     const handleLoadFromDatabase = async () => {
       try {
-        const response = await axios.get('http://localhost:5444/universities');
+        const response = await axios.get('http://localhost:8444/universities');
         dispatch({ type: 'universities/setUniversities', payload: response.data });
       } catch (error) {
         console.error('Error fetching universities from the database', error);
