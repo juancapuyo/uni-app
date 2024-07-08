@@ -34,12 +34,41 @@ const universitySchema = new mongoose.Schema({
 const University = mongoose.model('University', universitySchema);
 
 // RESTful API endpoint
+// Register a new user
+app.post('/register', async (req, res) => {
+    try {
+        const { username, password } = req.body;
+        const user = new User({ username, password });
+        await user.save();
+        res.status(201).json({ message: 'User registered successfully' });
+    } catch (err) {
+        res.status(400).json({ message: err.message });
+    }
+  });
+  
+  // Login a user
+app.post('/login', async (req, res) => {
+    try {
+        const { username, password } = req.body;
+        const user = await User.findOne({ username });
+        if (!user) return res.status(401).json({ message: 'Invalid credentials' });
+  
+        const isMatch = await user.comparePassword(password);
+        if (!isMatch) return res.status(401).json({ message: 'Invalid credentials' });
+  
+        const token = jwt.sign({ id: user._id }, secret, { expiresIn: '1h' });
+        res.json({ token });
+    } catch (err) {
+        res.status(500).json({ message: err.message });
+    }
+  });
+
 app.get('/universities', async (req, res) => {
-  try {
-    const universities = await University.find();
-    res.json(universities);
+    try {
+        const universities = await University.find();
+        res.json(universities);
   } catch (err) {
-    res.status(500).json({ message: err.message });
+        res.status(500).json({ message: err.message });
   }
 });
 
