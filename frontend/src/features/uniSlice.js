@@ -23,15 +23,19 @@ const uniSlice = createSlice({
     },
     setUniversities(state, action) {
       return action.payload;
+    },
+    appendUniversities(state, action) {
+      return [...state, ...action.payload];
     }
   },
   extraReducers: (builder) => {
     builder.addCase(fetchUniversities.fulfilled, (state, action) => {
-      return action.payload;
+      return [...state, ...action.payload];
     });
   }
 });
 
-export const { deleteLastUniversity, addFirstUniversityToEnd, setUniversities} = uniSlice.actions;
+export const { deleteLastUniversity, addFirstUniversityToEnd, setUniversities, appendUniversities } = uniSlice.actions;
 
 export default uniSlice.reducer;
+
