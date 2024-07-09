@@ -1,3 +1,4 @@
+// frontend/src/context/AuthContext.js
 import React, { createContext, useState, useContext } from 'react';
 import axios from 'axios';
 
@@ -11,15 +12,20 @@ export const AuthProvider = ({ children }) => {
     setUser(response.data);
   };
 
+  const register = async (username, password) => {
+    await axios.post(`${process.env.REACT_APP_BACKEND_URL}/register`, { username, password });
+  };
+
   const logout = () => {
     setUser(null);
   };
 
   return (
-    <AuthContext.Provider value={{ user, login, logout }}>
+    <AuthContext.Provider value={{ user, login, register, logout }}>
       {children}
     </AuthContext.Provider>
   );
 };
 
 export const useAuth = () => useContext(AuthContext);
+

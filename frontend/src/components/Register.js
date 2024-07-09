@@ -1,13 +1,18 @@
+// frontend/src/components/Register.js
 import React, { useState } from 'react';
-import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../AuthContext';
 
 const Register = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const { register } = useAuth();  // Ensure register is correctly accessed
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    await axios.post(`${process.env.REACT_APP_BACKEND_URL}/register`, { username, password });
+    await register(username, password);  // Ensure register is called correctly
+    navigate('/login');
   };
 
   return (
