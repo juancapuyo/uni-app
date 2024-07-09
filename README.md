@@ -38,6 +38,7 @@ npm start
 Backend terminal
 
 ```
+cd backend
 node server.js
 ```
 
