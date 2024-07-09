@@ -33,8 +33,6 @@ const universitySchema = new mongoose.Schema({
   web_pages: [String]
 });
 
-const University = mongoose.model('University', universitySchema);
-
 // RESTful API endpoint
 // Register a new user
 app.post('/register', async (req, res) => {
